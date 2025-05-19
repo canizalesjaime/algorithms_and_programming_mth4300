@@ -120,7 +120,7 @@ Logical operators evaluate conditions and return `true` or `false`.
 |----------|---------------------------|------------------------|
 | `!`      | NOT (negation)             | `!true → false`       |
 | `&&`     | AND (both must be true)    | `true && false → false` |
-| `||`     | OR (at least one is true)  | `true || false → true` |
+| `\|\|`     | OR (at least one is true)  | `true \|\| false → true` |
 | `==`     | Equality check             | `5 == 5 → true`       |
 
 ---
