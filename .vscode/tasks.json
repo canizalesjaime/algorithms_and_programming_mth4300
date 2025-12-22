@@ -2,6 +2,21 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Python: run current file",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "${file}"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "presentation": {
+        "reveal": "always"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "C/C++: build active file (g++)",
       "type": "shell",
       "command": "/bin/bash",
