@@ -120,7 +120,7 @@ When using git, sometimes you may want to code your own stuff in this repo, but 
 A C++ compiler is a program that translates C++ source code into machine code (executable binary) that a computer can run.
 
 So far we have seen compilation like this: ```g++ main.cpp``` and we know that this will create an a.out file. Sometimes we may have multiple files in a directory, say **main1.cpp** and **main2.cpp** and we don't want the compilation of **main1.cpp** to overwrite the compilation of **main2.cpp**. To solve this problem, we can simply just name the compilation of **main1.cpp** as  main1.out and **main1.cpp** as main2.out. To change the name of output executable file produced by g++ we use the `-o` flag. <br>
-**Example:**
+**Example: **
 ```
 g++ main1.cpp -o main1.out
 g++ main2.cpp -o main2.out
