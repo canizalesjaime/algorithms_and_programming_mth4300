@@ -83,15 +83,18 @@ The simplest method to download the g++ compiler for any computer will be via do
 
 
 ### Installation links
-* [docker install link](https://docs.docker.com/engine/install/)(Make sure to turn on wsl2 for if you're using windows)
-* mingw compiler - look up on youtube **how to install mingw g++ compiler on windows**(mac should already come with g++)
+* c++ compiler(you only need one compiler)
+  * [docker install link](https://docs.docker.com/engine/install/)(Make sure to turn on wsl2 for if you're using windows) (windows option)
+  * mingw compiler(recommended) - look up on youtube(or your favorite Ai) **how to install mingw g++ compiler on windows**
+  * On mac you should already have clang or g++, if you dont for some reason open your terminal and run: ```xcode-select --install```
+  * [Visual Studio Compiler](https://visualstudio.microsoft.com/vs/community/) - 
 * [git install link](https://git-scm.com/downloads)
 * [vscode install link](https://code.visualstudio.com/download)
   * To install vscode extensions use the shortcut **ctrl+shit+x**, then search for the following:  
-    * Dev Containers
-    * C/C++ Themes
+    * Dev Containers (only if you use docker)
+    * C/C++ Themes (recommended)
 
-Once you have installed all the links above, open vscode and its terminal with shortcut **ctrl+`**, and navigate to where you want to download the github folder on your computer. Once you settle on a location, run the command<br> ```git clone https://github.com/canizalesjaime/algorithms_and_programming_mth4300.git```
+Once you have installed the links above, open vscode and its terminal with shortcut **ctrl+`**, and navigate to where you want to download the github folder on your computer. Once you settle on a location, run the command<br> ```git clone https://github.com/canizalesjaime/algorithms_and_programming_mth4300.git```
 
 Create a folder and name it **hidden**, inside this folder you can develop code that won't conflict with the class code.
 
