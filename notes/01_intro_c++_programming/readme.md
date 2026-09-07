@@ -85,9 +85,9 @@ The simplest method to download the g++ compiler for any computer will be via do
 ### Installation links
 * c++ compiler(you only need one compiler)
   * [docker install link](https://docs.docker.com/engine/install/)(Make sure to turn on wsl2 for if you're using windows) (windows option)
-  * mingw compiler(recommended) - look up on youtube(or your favorite Ai) **how to install mingw g++ compiler on windows**
+  * mingw compiler - look up on youtube(or your favorite Ai) **how to install mingw g++ compiler on windows**
   * On mac you should already have clang or g++, if you dont for some reason open your terminal and run: ```xcode-select --install```
-  * [Visual Studio Compiler](https://visualstudio.microsoft.com/vs/community/) - 
+  * [Visual Studio Compiler](https://visualstudio.microsoft.com/vs/community/) - (recommended windows) then search for 'Developer Command Prompt for VS'. open the terminal then find your folders path like in the picture and open folder [resource image](./assets/vs_compiler_steps.png)
 * [git install link](https://git-scm.com/downloads)
 * [vscode install link](https://code.visualstudio.com/download)
   * To install vscode extensions use the shortcut **ctrl+shit+x**, then search for the following:  
