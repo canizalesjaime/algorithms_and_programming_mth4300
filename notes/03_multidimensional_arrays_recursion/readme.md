@@ -28,47 +28,320 @@ int main() {
 }
 ```
 
-### Multidimensional Arrays
-C++ also supports multidimensional arrays, such as 2D arrays, which can be visualized as tables.
+### Creating a 2D Array
 
-**Syntax:**
-
-```cpp
-type arrayName[rows][columns];
-```
-
-#### Example:
+A 2D array can be thought of as a table containing rows and columns.
 
 ```cpp
-int matrix[3][3] = {
-    {1, 2, 3},
-    {4, 5, 6},
-    {7, 8, 9}
+int arr[3][4] = {
+    {1,  2,  3,  4},
+    {5, 20,  7,  8},
+    {9, 10, 11, 12}
 };
 ```
-You can access elements in a 2D array using two indices:
 
-#### Example:
+This array has 3 rows and 4 columns:
+
+```text
+1   2   3   4
+5  20   7   8
+9  10  11  12
+```
+
+Elements are accessed using:
+
+```cpp
+arr[row][column]
+```
+
+For example:
+
+```cpp
+cout << arr[0][0];  // 1
+cout << arr[1][1];  // 20
+cout << arr[2][3];  // 12
+```
+
+C++ array indexes start at 0.
+
+---
+
+### Printing a 2D Array
+
+Because a 2D array has rows and columns, we can use two nested loops.
 
 ```cpp
 #include <iostream>
 using namespace std;
 
-int main() {
-    int matrix[3][3] = {
-        {1, 2, 3},
-        {4, 5, 6},
-        {7, 8, 9}
+int main()
+{
+    int arr[3][4] = {
+        {1,  2,  3,  4},
+        {5, 20,  7,  8},
+        {9, 10, 11, 12}
     };
-    cout << matrix[0][0]; // Outputs 1
-    cout << matrix[1][2]; // Outputs 6
+
+    for (int row = 0; row < 3; row++)
+    {
+        for (int col = 0; col < 4; col++)
+        {
+            cout << arr[row][col] << " ";
+        }
+
+        cout << endl;
+    }
+
     return 0;
 }
 ```
-### Key Points
-* Arrays have a fixed size, which must be known at compile time.
-* The size of the array can be determined using sizeof(array) / sizeof(array[0]).
-* Elements are accessed using zero-based indexing.
+
+Output:
+
+```text
+1 2 3 4
+5 20 7 8
+9 10 11 12
+```
+
+The outer loop moves through the rows:
+
+```cpp
+for (int row = 0; row < 3; row++)
+```
+
+The inner loop moves through the columns:
+
+```cpp
+for (int col = 0; col < 4; col++)
+```
+
+Therefore, the array is accessed in this order:
+
+```text
+arr[0][0]
+arr[0][1]
+arr[0][2]
+arr[0][3]
+
+arr[1][0]
+arr[1][1]
+arr[1][2]
+arr[1][3]
+
+arr[2][0]
+arr[2][1]
+arr[2][2]
+arr[2][3]
+```
+
+The `endl` is placed after the inner loop:
+
+```cpp
+cout << endl;
+```
+
+This causes C++ to move to a new line after printing each complete row.
+
+---
+
+### Finding the Maximum Value
+
+We can find the maximum value while traversing the 2D array.
+
+First, assume that the first element is the maximum:
+
+```cpp
+int max = arr[0][0];
+```
+
+Then compare every element against `max`.
+
+```cpp
+if (arr[row][col] > max)
+{
+    max = arr[row][col];
+}
+```
+
+If the current element is larger than `max`, we update `max`.
+
+---
+
+### Printing the Array and Finding the Maximum
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int arr[3][4] = {
+        {1,  2,  3,  4},
+        {5, 20,  7,  8},
+        {9, 10, 11, 12}
+    };
+
+    int max = arr[0][0];
+
+    for (int row = 0; row < 3; row++)
+    {
+        for (int col = 0; col < 4; col++)
+        {
+            cout << arr[row][col] << " ";
+
+            if (arr[row][col] > max)
+            {
+                max = arr[row][col];
+            }
+        }
+
+        cout << endl;
+    }
+
+    cout << "Maximum = " << max << endl;
+
+    return 0;
+}
+```
+
+Output:
+
+```text
+1 2 3 4
+5 20 7 8
+9 10 11 12
+
+Maximum = 20
+```
+
+---
+
+### How the Maximum Search Works
+
+Think of `max` as storing the largest number that we have seen so far.
+
+For example:
+
+```text
+Start:
+
+max = 1
+
+Check 1:
+1 > 1? No
+max = 1
+
+Check 2:
+2 > 1? Yes
+max = 2
+
+Check 3:
+3 > 2? Yes
+max = 3
+
+Check 4:
+4 > 3? Yes
+max = 4
+
+Check 5:
+5 > 4? Yes
+max = 5
+
+Check 20:
+20 > 5? Yes
+max = 20
+
+Check 7:
+7 > 20? No
+max = 20
+
+Check 8:
+8 > 20? No
+max = 20
+
+...
+```
+
+The final result is:
+
+```text
+max = 20
+```
+
+---
+
+### Why Initialize `max` With `arr[0][0]`?
+
+It is better to write:
+
+```cpp
+int max = arr[0][0];
+```
+
+instead of:
+
+```cpp
+int max = 0;
+```
+
+Suppose the array contains only negative numbers:
+
+```cpp
+int arr[2][3] = {
+    {-10, -4, -20},
+    {-8, -2, -15}
+};
+```
+
+If we use:
+
+```cpp
+int max = 0;
+```
+
+none of the numbers are greater than 0, so the program would incorrectly say:
+
+```text
+Maximum = 0
+```
+
+But `0` isn't even in the array.
+
+Starting with:
+
+```cpp
+int max = arr[0][0];
+```
+
+guarantees that `max` begins as an actual value from the array.
+
+---
+
+### General Pattern
+
+The general pattern for traversing a 2D array is:
+
+```cpp
+for (int row = 0; row < ROWS; row++)
+{
+    for (int col = 0; col < COLS; col++)
+    {
+        // Work with:
+        arr[row][col]
+    }
+}
+```
+
+This nested-loop pattern is commonly used for:
+
+- Printing matrices
+- Finding maximum/minimum values
+- Summing elements
+- Searching for values
+- Processing images
+- Working with grids
+- Matrix operations
 
 
 ## Recursion
