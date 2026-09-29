@@ -4,7 +4,8 @@
 1. Arrays Continued
 2. Recursion
 3. Function Call Stack
-4. Practice Examples
+4. Recursion Examples:
+5. Practice Examples
 
 
 ## Arrays Continued
@@ -399,7 +400,7 @@ In C++, when a function is called recursively, the compiler uses a **call stack*
 
 ---
 
-### **1. What is the Function Call Stack?**
+### **What is the Function Call Stack?**
 The **function call stack** is a **LIFO (Last In, First Out)** data structure used by the compiler to store:
 1. **Function return addresses**
 2. **Local variables**
@@ -410,7 +411,7 @@ Each function call creates a **stack frame** that holds the above information. W
 
 ---
 
-### **2. How the Call Stack Works in Recursion**
+### **How the Call Stack Works in Recursion**
 Let's consider a recursive function to compute factorial:
 
 ### **Example: Factorial Function**
@@ -451,7 +452,7 @@ Once `factorial(0)` returns `1`, the stack starts popping:
 
 Finally, `main()` receives the result `120` and the program ends.
 
-### 3. Stack Overflow in Recursion
+### Stack Overflow in Recursion
 If recursion depth is too large, the stack runs out of space, causing a stack overflow error.
 
 #### Example of Infinite Recursion (Stack Overflow)
@@ -467,65 +468,1138 @@ int main() {
 ```
 Since there's no base case, the function never terminates, and the call stack fills up until the program crashes.
 
-### 4. Tail Recursion Optimization
-#### Problem with Regular Recursion
-Each recursive call creates a new stack frame, increasing memory usage. Tail recursion is a technique where the recursive call is the last operation in the function, allowing the compiler to optimize memory usage.
 
-#### Example of Tail Recursion (Optimized)
+## Recursion Examples: Sum of an Array, Find Minimum, and Fibonacci
+
+### Sum of an Array Recursively
+
+Suppose we have:
+
+```cpp
+int arr[] = {1, 2, 3, 4, 5};
+```
+
+We want to calculate:
+
+\[
+1 + 2 + 3 + 4 + 5 = 15
+\]
+
+Normally, we could use a loop.
+
+With recursion, however, we want to reduce the problem into smaller versions of itself.
+
+---
+
+### Recursive Idea
+
+Suppose our function is:
+
+```cpp
+recursive_sum(arr, size, pos)
+```
+
+where:
+
+- `arr` is the array.
+- `size` is the number of elements.
+- `pos` is our current position in the array.
+
+At each position, we can say:
+
+$\text{sum from position } pos=arr[pos] + \text{sum from position } pos+1$
+
+For example:
+
+```text
+arr = {1, 2, 3, 4, 5}
+```
+
+Starting at position `0`:
+
+```text
+1 + sum of everything after 1
+```
+
+Then:
+
+```text
+1 + (2 + sum of everything after 2)
+```
+
+Then:
+
+```text
+1 + (2 + (3 + sum of everything after 3))
+```
+
+and so on.
+
+---
+
+### Base Case
+
+Eventually:
+
+```text
+pos == size
+```
+
+For an array of size 5, the valid positions are:
+
+```text
+0 1 2 3 4
+```
+
+So when:
+
+```text
+pos == 5
+```
+
+there are no elements left to add.
+
+The sum of no elements is:
+
+$0$
+
+Therefore our base case is:
+
+```cpp
+if (pos == size)
+    return 0;
+```
+
+---
+
+### Complete Function
+
+```cpp
+int recursive_sum(int arr[], int size, int pos)
+{
+    if (pos == size)
+        return 0;
+
+    return arr[pos] + recursive_sum(arr, size, pos + 1);
+}
+```
+
+We can call it with:
+
+```cpp
+int main()
+{
+    int arr[] = {1, 2, 3, 4, 5};
+
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    std::cout << recursive_sum(arr, size, 0) << std::endl;
+
+    return 0;
+}
+```
+
+The output is:
+
+```text
+15
+```
+
+---
+
+### Tracing the Recursive Sum
+
+Let's look at:
+
+```cpp
+recursive_sum(arr, 5, 0)
+```
+
+The first call returns:
+
+```text
+arr[0] + recursive_sum(arr, 5, 1)
+```
+
+which becomes:
+
+```text
+1 + recursive_sum(arr, 5, 1)
+```
+
+The next call gives:
+
+```text
+1 + (2 + recursive_sum(arr, 5, 2))
+```
+
+Then:
+
+```text
+1 + (2 + (3 + recursive_sum(arr, 5, 3)))
+```
+
+Then:
+
+```text
+1 + (2 + (3 + (4 + recursive_sum(arr, 5, 4))))
+```
+
+Then:
+
+```text
+1 + (2 + (3 + (4 + (5 + recursive_sum(arr, 5, 5)))))
+```
+
+Now:
+
+```text
+pos == size
+```
+
+so:
+
+```cpp
+recursive_sum(arr, 5, 5)
+```
+
+returns:
+
+```text
+0
+```
+
+Therefore:
+
+```text
+1 + 2 + 3 + 4 + 5 + 0
+```
+
+The recursion begins returning:
+
+```text
+recursive_sum(arr, 5, 5) = 0
+
+recursive_sum(arr, 5, 4) = 5 + 0
+                           = 5
+
+recursive_sum(arr, 5, 3) = 4 + 5
+                           = 9
+
+recursive_sum(arr, 5, 2) = 3 + 9
+                           = 12
+
+recursive_sum(arr, 5, 1) = 2 + 12
+                           = 14
+
+recursive_sum(arr, 5, 0) = 1 + 14
+                           = 15
+```
+
+So:
+
+$\boxed{15}$
+
+---
+
+### Why the Base Case Matters
+
+Imagine that we didn't have:
+
+```cpp
+if (pos == size)
+    return 0;
+```
+
+Then the calls would continue:
+
+```text
+recursive_sum(arr, 5, 0)
+recursive_sum(arr, 5, 1)
+recursive_sum(arr, 5, 2)
+recursive_sum(arr, 5, 3)
+recursive_sum(arr, 5, 4)
+recursive_sum(arr, 5, 5)
+recursive_sum(arr, 5, 6)
+recursive_sum(arr, 5, 7)
+...
+```
+
+The recursion would never intentionally stop.
+
+We would also start accessing positions outside of our array.
+
+Eventually, we could get a stack overflow or other undefined behavior.
+
+Therefore, always ask yourself:
+
+```text
+1. What is my base case?
+
+2. How does each recursive call move closer to the base case?
+```
+
+For our array:
+
+```cpp
+pos + 1
+```
+
+moves us closer to:
+
+```cpp
+pos == size
+```
+
+---
+
+### Recursive Find Minimum 
+```cpp
+find_min(arr, size)
+```
+
+The idea is:
+
+> Find the minimum of the first `size - 1` elements, then compare that result with the last element.
+
+---
+
+# 1. The Problem
+
+Suppose we have:
+
+```cpp
+int arr[] = {8, 3, 17, 2, 12};
+```
+
+We want our recursive function to return:
+
+```text
+2
+```
+
+Our function will look like:
+
+```cpp
+int find_min(int arr[], int size)
+```
+
+where:
+
+- `arr` is the array.
+- `size` tells us how many elements we are currently considering.
+
+---
+
+# 2. Recursive Idea
+
+Suppose we want to find the minimum of:
+
+```text
+{8, 3, 17, 2, 12}
+```
+
+Instead of solving the entire problem ourselves, we can ask recursion:
+
+> What is the minimum of the first 4 elements?
+
+Those elements are:
+
+```text
+{8, 3, 17, 2}
+```
+
+Once recursion gives us that answer, all we need to do is compare it with:
+
+```text
+12
+```
+
+So conceptually:
+
+
+$\text{minimum of first 5 elements}=\min(\text{minimum of first 4 elements},\text{5th element})$
+
+More generally:
+
+$\boxed{\text{min}(n)=\min(\text{min}(n-1),arr[n-1])}$
+
+---
+
+### Base Case
+
+Eventually, recursion will reduce the problem to an array containing only one element.
+
+For example:
+
+```text
+{8}
+```
+
+What is the minimum of an array containing only `8`?
+
+Obviously:
+
+```text
+8
+```
+
+Therefore:
+
+```cpp
+if (size == 1)
+    return arr[0];
+```
+
+This is our base case.
+
+---
+
+### Complete Function
+
+```cpp
+int find_min(int arr[], int size)
+{
+    if (size == 1)
+        return arr[0];
+
+    int previous_min = find_min(arr, size - 1);
+
+    if (arr[size - 1] < previous_min)
+        return arr[size - 1];
+
+    return previous_min;
+}
+```
+
+We can use it like this:
+
 ```cpp
 #include <iostream>
 using namespace std;
 
-int tailFactorial(int n, int result = 1) {
-    if (n == 0) return result;  // Base case
-    return tailFactorial(n - 1, n * result);  // Tail recursive call
+int find_min(int arr[], int size)
+{
+    if (size == 1)
+        return arr[0];
+
+    int previous_min = find_min(arr, size - 1);
+
+    if (arr[size - 1] < previous_min)
+        return arr[size - 1];
+
+    return previous_min;
 }
 
-int main() {
-    cout << "Factorial of 5: " << tailFactorial(5) << endl;
+int main()
+{
+    int arr[] = {8, 3, 17, 2, 12};
+
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    cout << find_min(arr, size) << endl;
+
     return 0;
 }
 ```
-💡 In tail recursion, the compiler can replace recursive calls with a loop internally (tail call optimization). However, C++ does not guarantee tail call optimization.
 
-### 5. Function Call Stack vs. Explicit Stack
-Instead of recursion, we can use an explicit stack (like ```std::stack```) to manage function calls manually.
+Output:
 
-#### Example: Iterative Factorial Using a Stack
+```text
+2
+```
+
+---
+
+### Tracing the Recursion
+
+We begin with:
+
+```cpp
+find_min(arr, 5)
+```
+
+Our array is:
+
+```text
+index:     0    1    2    3    4
+          -----------------------
+value:     8    3   17    2   12
+```
+
+The function cannot determine the answer yet because it first executes:
+
+```cpp
+int previous_min = find_min(arr, size - 1);
+```
+
+So:
+
+```cpp
+find_min(arr, 5)
+```
+
+calls:
+
+```cpp
+find_min(arr, 4)
+```
+
+That calls:
+
+```cpp
+find_min(arr, 3)
+```
+
+That calls:
+
+```cpp
+find_min(arr, 2)
+```
+
+That calls:
+
+```cpp
+find_min(arr, 1)
+```
+
+So the calls look like:
+
+```text
+find_min(arr, 5)
+        |
+        v
+find_min(arr, 4)
+        |
+        v
+find_min(arr, 3)
+        |
+        v
+find_min(arr, 2)
+        |
+        v
+find_min(arr, 1)
+```
+
+---
+
+### Reaching the Base Case
+
+Eventually:
+
+```cpp
+find_min(arr, 1)
+```
+
+executes:
+
+```cpp
+if (size == 1)
+    return arr[0];
+```
+
+Since:
+
+```text
+arr[0] = 8
+```
+
+we return:
+
+```text
+8
+```
+
+Now recursion starts going back upward.
+
+---
+
+### Coming Back Up
+
+We return to:
+
+```cpp
+find_min(arr, 2)
+```
+
+The recursive call gave us:
+
+```text
+previous_min = 8
+```
+
+Now we compare:
+
+```cpp
+arr[size - 1]
+```
+
+Since:
+
+```text
+size = 2
+```
+
+we have:
+
+```cpp
+arr[2 - 1]
+```
+
+which is:
+
+```cpp
+arr[1]
+```
+
+and:
+
+```text
+arr[1] = 3
+```
+
+So we compare:
+
+```text
+3 < 8
+```
+
+This is true.
+
+Therefore:
+
+```text
+return 3
+```
+
+---
+
+Now we return to:
+
+```cpp
+find_min(arr, 3)
+```
+
+The recursive call returned:
+
+```text
+previous_min = 3
+```
+
+The current element is:
+
+```cpp
+arr[3 - 1]
+```
+
+which is:
+
+```cpp
+arr[2] = 17
+```
+
+Compare:
+
+```text
+17 < 3
+```
+
+False.
+
+Therefore:
+
+```text
+return 3
+```
+
+---
+
+Now we return to:
+
+```cpp
+find_min(arr, 4)
+```
+
+The recursive call returned:
+
+```text
+previous_min = 3
+```
+
+The current element is:
+
+```cpp
+arr[4 - 1]
+```
+
+which is:
+
+```cpp
+arr[3] = 2
+```
+
+Compare:
+
+```text
+2 < 3
+```
+
+True.
+
+Therefore:
+
+```text
+return 2
+```
+
+---
+
+Finally, we return to:
+
+```cpp
+find_min(arr, 5)
+```
+
+The recursive call returned:
+
+```text
+previous_min = 2
+```
+
+The current element is:
+
+```cpp
+arr[5 - 1]
+```
+
+which is:
+
+```cpp
+arr[4] = 12
+```
+
+Compare:
+
+```text
+12 < 2
+```
+
+False.
+
+Therefore:
+
+```text
+return 2
+```
+
+Our final answer is:
+
+```text
+2
+```
+
+---
+
+### Visualizing the Entire Process
+
+First, recursion goes down:
+
+```text
+find_min(arr, 5)
+        |
+        v
+find_min(arr, 4)
+        |
+        v
+find_min(arr, 3)
+        |
+        v
+find_min(arr, 2)
+        |
+        v
+find_min(arr, 1)
+        |
+        v
+   BASE CASE
+        |
+        v
+        8
+```
+
+Then the answers come back up:
+
+```text
+find_min(arr, 1) = 8
+        |
+        v
+min(8, 3) = 3
+        |
+        v
+min(3, 17) = 3
+        |
+        v
+min(3, 2) = 2
+        |
+        v
+min(2, 12) = 2
+```
+
+Therefore:
+
+```text
+find_min(arr, 5) = 2
+```
+---
+
+
+### Fibonacci Recursion
+
+Another classic example of recursion is the Fibonacci sequence.
+
+The Fibonacci sequence begins:
+
+```text
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
+```
+
+Each number is the sum of the previous two numbers.
+
+Mathematically:
+
+$\boxed{F(n) = F(n-1) + F(n-2)}$
+
+For example:
+
+$F(6) = F(5) + F(4)$
+
+Since:
+
+$F(5)=5$
+
+and:
+
+$F(4)=3$
+
+we get:
+
+$F(6)=5+3=8$
+
+---
+
+### Fibonacci Base Cases
+
+We need somewhere for the recursion to stop.
+
+The first two Fibonacci numbers are defined as:
+
+$F(0)=0$
+
+and:
+
+$F(1)=1$
+
+These are our base cases.
+
+We can write:
+
+```cpp
+int fibonacci(int n)
+{
+    if (n == 0)
+        return 0;
+
+    if (n == 1)
+        return 1;
+
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+Since:
+
+```text
+F(0) = 0
+F(1) = 1
+```
+
+we can also combine the two base cases:
+
+```cpp
+int fibonacci(int n)
+{
+    if (n <= 1)
+        return n;
+
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+---
+
+### Complete Fibonacci Program
+
 ```cpp
 #include <iostream>
-#include <stack>
 
-int factorial(int n) {
-    std::stack<int> s;
-    int result = 1;
+int fibonacci(int n)
+{
+    if (n <= 1)
+        return n;
 
-    for (int i = 1; i <= n; i++)
-        s.push(i);
-
-    while (!s.empty()) {
-        result *= s.top();
-        s.pop();
-    }
-
-    return result;
+    return fibonacci(n - 1) + fibonacci(n - 2);
 }
 
-int main() {
-    std::cout << "Factorial of 5: " << factorial(5) << std::endl;
+int main()
+{
+    std::cout << fibonacci(6) << std::endl;
+
     return 0;
 }
 ```
 
-Advantages of an explicit stack: ✔ Avoids recursion overhead.
-✔ Prevents stack overflow for deep recursion cases.
+Output:
 
-### Conclusion
-* The function call stack is used to manage recursion.
-* Each recursive function call creates a stack frame that stores local variables and return addresses.
-* Stack overflow occurs when too many recursive calls fill up the memory.
-* Tail recursion can optimize memory usage in some compilers.
-* Explicit stacks (```std::stack```) can be used instead of recursion for better control.
+```text
+8
+```
+
+---
+
+### Tracing Fibonacci
+
+Suppose we call:
+
+```cpp
+fibonacci(4)
+```
+
+According to the formula:
+
+$F(4)=F(3)+F(2)$
+
+But the computer doesn't know `F(3)` or `F(2)` yet.
+
+Therefore, both become recursive calls.
+
+We get:
+
+```text
+                    F(4)
+                  /      \
+               F(3)      F(2)
+              /   \      /   \
+           F(2)   F(1) F(1)  F(0)
+          /   \
+       F(1)   F(0)
+```
+
+Eventually, every branch reaches one of our base cases:
+
+```text
+F(0) = 0
+F(1) = 1
+```
+
+Now the answers can travel back up.
+
+Start with:
+
+```text
+F(2) = F(1) + F(0)
+     = 1 + 0
+     = 1
+```
+
+Then:
+
+```text
+F(3) = F(2) + F(1)
+     = 1 + 1
+     = 2
+```
+
+Finally:
+
+```text
+F(4) = F(3) + F(2)
+     = 2 + 1
+     = 3
+```
+
+Therefore:
+
+\[
+\boxed{F(4)=3}
+\]
+
+---
+
+### Fibonacci Introduces a New Idea
+
+Our previous functions only made one recursive call.
+
+For example, `find_min`:
+
+```cpp
+return find_min(arr, size, pos + 1, min);
+```
+
+creates something resembling a chain:
+
+```text
+find_min(...)
+      |
+      v
+find_min(...)
+      |
+      v
+find_min(...)
+      |
+      v
+find_min(...)
+```
+
+Fibonacci is different.
+
+It makes **two recursive calls**:
+
+```cpp
+return fibonacci(n - 1) + fibonacci(n - 2);
+```
+
+Therefore, the calls branch:
+
+```text
+                 F(n)
+                /    \
+           F(n-1)    F(n-2)
+            /  \      /  \
+           ... ...   ... ...
+```
+
+This is called a **recursion tree**.
+
+Recursion does not mean that a function can only call itself once.
+
+A recursive function can make multiple recursive calls.
+
+---
+
+### A Problem With Recursive Fibonacci
+
+Look again at:
+
+```text
+                    F(4)
+                  /      \
+               F(3)      F(2)
+              /   \      /   \
+           F(2)   F(1) F(1)  F(0)
+          /   \
+       F(1)   F(0)
+```
+
+Notice something interesting.
+
+We calculate:
+
+```text
+F(2)
+```
+
+more than once.
+
+For larger Fibonacci numbers, this problem becomes much worse.
+
+For example, calculating:
+
+```cpp
+fibonacci(40)
+```
+
+causes the program to repeatedly calculate many of the same Fibonacci numbers.
+
+So this version:
+
+```cpp
+int fibonacci(int n)
+{
+    if (n <= 1)
+        return n;
+
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+```
+
+is excellent for **learning recursion**, but it is not an efficient way to calculate large Fibonacci numbers.
+
+Later, this problem can introduce an important concept called **memoization**, where we save previously calculated answers instead of calculating them repeatedly.
+
+---
+
+
+
+## The Most Important Recursion Questions
+
+Whenever you are trying to create a recursive solution, ask yourself:
+
+```text
+1. What is the smaller version of this problem?
+
+2. What is my base case?
+
+3. How does each recursive call move toward the base case?
+
+4. What does the recursive call return?
+
+5. What do I do with the value returned by the recursive call?
+```
+
+For the array sum:
+
+```text
+Base case:
+pos == size
+
+Smaller problem:
+sum the array starting at pos + 1
+
+Recursive relationship:
+arr[pos] + recursive_sum(..., pos + 1)
+```
+
+For find minimum:
+
+```text
+Base case:
+pos == size
+
+Smaller problem:
+search the remaining elements starting at pos + 1
+
+Information carried forward:
+current minimum
+
+Recursive relationship:
+find_min(..., pos + 1, min)
+```
+
+For Fibonacci:
+
+```text
+Base cases:
+F(0) = 0
+F(1) = 1
+
+Smaller problems:
+F(n - 1)
+F(n - 2)
+
+Recursive relationship:
+F(n) = F(n - 1) + F(n - 2)
+```
+
+These three examples demonstrate three very useful ways to start thinking recursively.
 
 ## Practice Examples
 1. Write a C++ program, that prompts the user for the number of rows and 
@@ -544,5 +1618,41 @@ Print the computed 2d array.
 \end{bmatrix}
 ```
 
-2. In C++, write a function that computes the nth fibonacci number from the 
-fibonacci sequence. Make sure to use recursion in your function.
+2. Given the following array:
+
+```cpp
+int arr[] = {2, 5, 2, 8, 2, 7};
+```
+
+Write a recursive function:
+
+```cpp
+int count_occurrences(int arr[], int size, int target)
+```
+
+that returns the number of times `target` appears in the array.
+
+For example:
+
+```cpp
+int main()
+{
+    int arr[] = {2, 5, 2, 8, 2, 7};
+    int size = 6;
+
+    cout << count_occurrences(arr, size, 2) << endl;
+
+    return 0;
+}
+```
+
+The expected output is:
+
+```text
+3
+```
+
+- You may **not** use a `for` loop or `while` loop.
+- Your solution must use recursion.
+- Each recursive call should reduce the size of the problem.
+- Your function must contain a base case.

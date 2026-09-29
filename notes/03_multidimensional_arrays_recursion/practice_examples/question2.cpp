@@ -2,28 +2,20 @@
 
 using namespace std;
 
-int nth_fibonacci_number(int n);
+int count_occurrences(int arr[], int size, int target)
+{
+    if(size==0) return 0;
+    
+    if(arr[size-1] == target) return 1+count_occurrences(arr,size-1,target);
 
+    else return 0+count_occurrences(arr,size-1,target);
+}
 
 int main()
 {
-    cout<<"Enter n: "<<endl;
-    int n;
-    cin>>n;
+    int arr[] = {2, 5, 2, 8, 2, 7};
+    int size = 6;
 
-    cout<<nth_fibonacci_number(n)<<endl;
+    cout << count_occurrences(arr, size, 2) << endl;
     return 0;
-}
-
-
-int nth_fibonacci_number(int n)
-{
-    if(n==0) // Base case #1
-        return 0;
-    
-    else if(n==1) // Base case #2
-        return 1;
-
-    else 
-        return nth_fibonacci_number(n-1) + nth_fibonacci_number(n-2);
 }
